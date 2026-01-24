@@ -3,8 +3,8 @@
 #include <comm.h>
 #include <lwip/sockets.h>
 
-#define STEPPER_CORRECT_DIR(x) ((x)) // Normal (right)
-// #define STEPPER_CORRECT_DIR(x) (-(x)) // Reversed (left)
+// #define STEPPER_CORRECT_DIR(x) ((x)) // Normal (right)
+#define STEPPER_CORRECT_DIR(x) (-(x)) // Reversed (left)
 
 #define STEPPER_PULSE_PER_REV 800 // pulse/rev
 #define RAIL_MM_PER_REV 75 // mm/rev
@@ -14,7 +14,7 @@
 // Define some steppers and the pins the will use
 AccelStepper stepper(AccelStepper::DRIVER, 20, 19);
 
-bool reach_zero = false;
+volatile bool reach_zero = false;
 
 uint32_t last_action_time;
 
@@ -23,7 +23,7 @@ uint32_t last_action_time;
 esp_timer_handle_t timer;
 
 void timer_callback(void *arg) {
-  if (!digitalRead(14)) {
+  if (!digitalRead(14) && !reach_zero) {
     // Serial.println("limit reach");
     stepper.setCurrentPosition(0);
     reach_zero = true;
