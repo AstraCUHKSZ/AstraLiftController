@@ -68,7 +68,7 @@ void setup() {
   ESP_ERROR_CHECK(esp_timer_start_once(timer, TIMER_TIMEOUT_US));
 
   stepper.setMaxSpeed((float)100 / RAIL_MM_PER_REV * STEPPER_PULSE_PER_REV);
-  stepper.moveTo(STEPPER_CORRECT_DIR(-STEPPER_MAX_PULSE));
+  stepper.moveTo(STEPPER_CORRECT_DIR((int)(STEPPER_MAX_PULSE/2)));
   while (!reach_zero) delay(1);
   Serial.println("reach zero");
   stepper.setMaxSpeed((float)MAX_SPEED_MM / RAIL_MM_PER_REV * STEPPER_PULSE_PER_REV);
